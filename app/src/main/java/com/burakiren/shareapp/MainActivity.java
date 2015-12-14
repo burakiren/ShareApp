@@ -17,6 +17,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     Button bLogout;
     EditText etPassword, etUsername;
+    UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +30,32 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         bLogout = (Button) findViewById(R.id.bLogout);
 
         bLogout.setOnClickListener(this);
+        userLocalStore = new UserLocalStore(this);
 
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(authenticate())
+        {
+            displayUserDetails();
+
+        }
+    }
+
+    private boolean authenticate()
+    {
+        return userLocalStore.getUserLoggedIn();
+    }
+
+    private void displayUserDetails()
+    {
+        User user = userLocalStore.getLoggedInUser();
+
+        etPassword.setText(user.password);
+        etUsername.setText(user.username);
     }
 
     @Override
@@ -39,6 +64,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         switch (v.getId())
         {
             case R.id.bLogout:
+                userLocalStore.clearUserData();
+                userLocalStore.setUserLoggedIn(false);
 
                 startActivity(new Intent(this, Login.class));
                 break;

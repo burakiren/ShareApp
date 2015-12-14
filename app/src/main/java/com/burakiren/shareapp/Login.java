@@ -18,6 +18,7 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
     Button bLogin;
     EditText etUserName, etPassword;
     TextView tvRegisterLink;
+    UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +31,43 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
         bLogin = (Button) findViewById(R.id.bLogin);
 
         bLogin.setOnClickListener(this);
+        userLocalStore = new UserLocalStore(this);
+
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(authenticate())
+        {
+            displayUserDetails();
+
+        }
+    }
+
+    private boolean authenticate()
+    {
+        return userLocalStore.getUserLoggedIn();
+    }
+
+    private void displayUserDetails()
+    {
+        User user = userLocalStore.getLoggedInUser();
+        etUserName.setText(user.name);
+        etPassword.setText(user.password);
+    }
     @Override
     public void onClick(View v) {
 
         switch (v.getId())
         {
             case R.id.bLogin:
+
+                User user = new User(null, null);
+
+                userLocalStore.storeUserData(user);
+                userLocalStore.setUserLoggedIn(true);
                 break;
             case R.id.tvRegisterLink:
                 startActivity(new Intent(this, Register.class));
