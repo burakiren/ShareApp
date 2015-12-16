@@ -13,7 +13,7 @@ public class Login extends ActionBarActivity implements View.OnClickListener{
     Button bLogin;
     EditText etUserName, etPassword;
     TextView tvRegisterLink;
-    UserLocalStore userLocalStore; 
+    UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
